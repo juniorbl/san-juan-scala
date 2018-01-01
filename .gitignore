@@ -1,0 +1,36 @@
+logs
+*.iml
+target
+.idea
+.idea_modules
+.vscode
+RUNNING_PID
+generated.keystore
+generated.truststore
+*.log
+
+# Scala-IDE specific
+bin/
+.scala_dependencies
+.classpath
+.project
+.settings/
+.cache-main
+.cache-tests
+
+# Ignore Play! working directory #
+bin/
+/db
+.eclipse
+/lib/
+/logs/
+/modules
+/project/project
+/project/target
+/target
+tmp/
+test-result
+server.pid
+*.eml
+/dist/
+.cache
