@@ -5,7 +5,7 @@ package models
   */
 object Game {
 
-  /** Create all the role cards of the game.
+  /** Creates all the role cards of the game.
     *
     * @return a list of the role cards
     */
@@ -17,5 +17,15 @@ object Game {
       RoleCard("Prospector", "none", "prospector draws one card"),
       RoleCard("Producer", "each player can produce one good", "producer can produce one additional good")
     )
+  }
+
+  /** Draws a number of cards from a given deck.
+    *
+    * @param quantity the quantity that should be drawn from the deck
+    * @param deck the deck the cards should be drawn from
+    * @return the new deck without the drawn cards
+    */
+  def drawCards(quantity: Int, deck: List[BuildingCard]): (List[BuildingCard], List[BuildingCard]) = {
+    deck.splitAt(quantity)
   }
 }
