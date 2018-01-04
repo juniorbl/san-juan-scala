@@ -32,6 +32,7 @@ tmp/
 test-result
 server.pid
 *.eml
+.DS_Store
 /dist/
 .cache
 
