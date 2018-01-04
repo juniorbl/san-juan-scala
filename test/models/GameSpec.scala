@@ -15,22 +15,39 @@ class GameSpec extends PlaySpec {
       roleCards.distinct.size mustBe 5
     }
 
-    "drawn the cards from the top of the deck" in {
-      val deck = List(
-        BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1),
-        BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1),
-        BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1),
-        BuildingCard("Office building", 1, "beginning of a round", "owner may discard 1 or 2 cards and then draw 1 or 2 new cards", 1)
+    "drawn the correct card at various indexes" in {
+      val cardStack = Vector(
+        (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 3),
+        (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 3),
+        (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 3)
       )
-      val (drawnCards, newDeck) = Game.drawCards(2, deck)
-      drawnCards mustBe List(
-        BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1),
-        BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1)
-      )
-      newDeck mustBe List(
-        BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1),
-        BuildingCard("Office building", 1, "beginning of a round", "owner may discard 1 or 2 cards and then draw 1 or 2 new cards", 1)
-      )
+
+      val (card, newCardStack) = Game.drawCardFromStack(3, cardStack)
+      card mustBe BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1)
+      newCardStack mustBe
+        Vector(
+          (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 2), // decreased quantity of the card drawn
+          (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 3),
+          (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 3)
+        )
+
+      val (card2, newCardStack2) = Game.drawCardFromStack(5, cardStack)
+      card2 mustBe BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1)
+      newCardStack2 mustBe
+        Vector(
+          (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 3),
+          (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 2), // decreased quantity of the card drawn
+          (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 3)
+        )
+
+      val (card3, newCardStack3) = Game.drawCardFromStack(7, cardStack)
+      card3 mustBe BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1)
+      newCardStack3 mustBe
+        Vector(
+          (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 3),
+          (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 3),
+          (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 2) // decreased quantity of the card drawn
+        )
     }
   }
 }
