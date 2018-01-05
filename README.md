@@ -25,6 +25,7 @@ Using a terminal, go to the project's root folder and run `sbt test`
 * [Scala 2.12.3](https://www.scala-lang.org/) - programming language
 * [Play Framework 2.6](https://www.playframework.com/) - web framework
 * [Akka 2.5.7](https://akka.io/) - concurrent toolkit
+* [Bootstrap v4.0.0-beta.3](https://getbootstrap.com/) - toolkit for developing with HTML, CSS, and JS
 
 ## Authors
 
