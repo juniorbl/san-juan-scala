@@ -1,5 +1,7 @@
 # San Juan Scala
 
+[![Build Status](https://travis-ci.org/juniorbl/san-juan-scala.svg?branch=master)](https://travis-ci.org/juniorbl/san-juan-scala)
+
 Implementation of the board game San Juan by Andreas Seyfarth using Scala, Play and Akka. This project is for study purposes of functional and reactive programming.
 
 ## Getting Started
