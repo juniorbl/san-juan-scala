@@ -21,7 +21,7 @@ object CardSupplyPile {
     )
   }
 
-  /** Represents drawing a card from the supply pile, returning a new pile with updated values. To represent the randomness of the drawing, the index should randomly generated.
+  /** Represents drawing a card from the supply pile, returning a new pile with updated values. To represent the randomness of the drawing, the index should be randomly generated.
     * Ex: given the supply pile [Archive card, 3 units], [Gold Mine card, 3 units], drawing a card at index 4 would return:
     * the card: Gold Mine card
     * the updated supply pile: [Archive card, 3 units], [Gold Mine card, 2 units]
