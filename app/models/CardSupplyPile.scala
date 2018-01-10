@@ -28,7 +28,7 @@ object CardSupplyPile {
     *
     * @param cardIndexToTake the index of the pile where the card should be taken, from 0 to the size of the pile
     * @param supplyPile the supply pile from where the card should be drawn
-    * @return a tuple with the card drawn and the new supply pile
+    * @return a tuple with the card drawn and the updated supply pile
     */
   def drawCard(cardIndexToTake: Int, supplyPile: Vector[(BuildingCard, Int)]): (BuildingCard, Vector[(BuildingCard, Int)]) = {
 

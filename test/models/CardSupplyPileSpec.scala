@@ -45,7 +45,7 @@ class CardSupplyPileSpec extends PlaySpec {
     }
 
     "return an updated supply pile after drawing cards" in {
-      val supplyWith9cards = Vector(
+      val supplyWith9cards = Vector( // 9 cards
         (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 3),
         (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 3),
         (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 3)

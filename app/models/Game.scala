@@ -1,5 +1,7 @@
 package models
 
+import scala.util.Random
+
 /** The central game logic.
   *
   */
@@ -17,5 +19,19 @@ object Game {
       RoleCard("Prospector", "none", "prospector draws one card"),
       RoleCard("Producer", "each player can produce one good", "producer can produce one additional good")
     )
+  }
+
+  /** Perform the privilege action of the Prospector card: the player gets one card from the supply pile.
+    *
+    * @param playerHand the player hand
+    * @param supplyPile the game supply pile
+    * @return a tuple with the updated player hand and the updated supply pile
+    */
+  def prospect(playerHand: List[BuildingCard], supplyPile: Vector[(BuildingCard, Int)]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
+    val (cardDrawn, updatedSupplyPile) = CardSupplyPile.drawCard(
+      Random.nextInt(supplyPile.map(_._2).sum),
+      supplyPile)
+    val updatedPlayerHand = cardDrawn :: playerHand
+    (updatedPlayerHand, updatedSupplyPile)
   }
 }
