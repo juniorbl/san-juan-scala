@@ -9,8 +9,9 @@ import play.api.libs.json.{JsValue, Json, Writes}
   * @param abilityPhase the phase that the card can use its ability
   * @param ability the ability the card offers to its holder
   * @param victoryPoints the number of victory points the card has
+  * @param discard whether this card should be discarded or not
   */
-case class BuildingCard(name: String, cost: Int, abilityPhase: String, ability: String, victoryPoints: Int)
+case class BuildingCard(name: String, cost: Int, abilityPhase: String, ability: String, victoryPoints: Int, discard: Boolean = false)
 
 object BuildingCard {
 
