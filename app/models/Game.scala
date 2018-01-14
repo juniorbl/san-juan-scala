@@ -35,12 +35,12 @@ object Game {
     (updatedPlayerHand, updatedSupplyPile)
   }
 
-  /** Perform the action of the Builder card.
+  /** Perform the action of the Builder card: build a building by receiving the number of cards described in the cost of the card to build.
     *
     * @param cardToBuild the card that will be built
     * @param playerHand the player hand with the cards that should be discarded
     * @param privilege whether or not the action is a privilege, if true the cost of the card to build decreases by 1 card
-    * @return Either with the building card that was built and the updated player hand, or an error message
+    * @return Either: Right - the building card that was built and the updated player hand, or Left - an error message
     */
   def build(cardToBuild: BuildingCard, playerHand: List[BuildingCard], privilege: Boolean): Either[String, (BuildingCard, List[BuildingCard])] = {
     val cardToBuildCost = if (privilege) cardToBuild.cost - 1 else cardToBuild.cost
