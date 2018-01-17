@@ -8,8 +8,17 @@ Implementation of the board game San Juan by Andreas Seyfarth using Scala, Play 
 
 ### Prerequisites
 
-* jdk 8 or later
-* sbt 1.0.4 or later
+* jdk 8
+* sbt 1.0.4
+* MongoDB 3.6
+
+### Setup
+
+Setup the database in MongoDB, run `bin/mongo` and:
+
+1. create the database: `use sanJuanScala`
+2. create the collection: `db.createCollection("sjsCollection", { size: 10000000, max: 15000000 })`
+3. create the user and role: `db.createUser( {user: "sjsUser", pwd: "somepwd", roles: [ {role: "readWrite", db: "sanJuanScala"} ]} )`
 
 ### Running the application
 
@@ -28,6 +37,7 @@ Using a terminal, go to the project's root folder and run `sbt test`
 * [Play Framework 2.6](https://www.playframework.com/) - web framework
 * [Akka 2.5.7](https://akka.io/) - concurrent toolkit
 * [Bootstrap v4.0.0-beta.3](https://getbootstrap.com/) - toolkit for developing with HTML, CSS, and JS
+* [MongoDB 3.6](https://www.mongodb.com/) - document-oriented NoSQL database
 
 ## Authors
 
