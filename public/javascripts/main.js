@@ -2,65 +2,59 @@
 $(document).ready(function() {
     $('#infoLogBar').hide();
 
-    var supplyCardCount = 0;
+    var handCardCount = 0;
+    var buildingCardCount = 0;
     var roleCardCount = 0;
-    var gameSocket = new WebSocket($('#gameWebSocket').val());
-
-    gameSocket.onopen = function() {
-        sendWebSockedStatusToInfoLog(gameSocket, 'socket open', true);
-    }
-
-    gameSocket.onclose = function() {
-        sendWebSockedStatusToInfoLog(gameSocket, 'socket closed', true);
-    }
-
-    gameSocket.onmessage = function(event) {
-        sendWebSockedStatusToInfoLog(gameSocket, 'message received from socket');
-        var cardsResult = JSON.parse(event.data);
-        if (cardsResult.cardType == 'role') {
-            displayRoleCard(cardsResult.cards);
-        } else if (cardsResult.cardType == 'supply') {
-            displaySupplyCard(cardsResult.cards);
-        }
-    }
-
-    $('#drawCard').click(function() {
-        gameSocket.send("drawCard");
-    });
-
-    $('#buildRoleCards').click(function() {
-        gameSocket.send("buildRoleCards");
-    });
-
-    $('#infoLogBtn').click(function() {
-        $('#infoLogBar').fadeIn();
-    });
 
     $('#infoLogHideBtn').click(function() {
         $('#infoLogBar').fadeOut();
     });
 
-    function displaySupplyCard(supplyCards) {
-        supplyCards.forEach(function(supplyCard) {
+    $('#createGameBtn').click(function() {
+        $.ajax({
+            type: 'GET',
+            url: '/createGame'
+        }).done(function(roleCardsAndPlayer) {
+            displayHandOrBuildingCards(roleCardsAndPlayer.player.hand, 'hand');
+            displayHandOrBuildingCards(roleCardsAndPlayer.player.buildings, 'building');
+            displayRoleCard(roleCardsAndPlayer.roleCards)
+        }).fail(function(error) {
+            sendErrorToInfoLog(error);
+            $('#infoLogBar').fadeIn();
+        });
+    });
+
+    function displayHandOrBuildingCards(cards, handOrBuilding) {
+        var cardCounterName = 'buildingCardCount';
+        var cardCounterValue = buildingCardCount;
+        var cardBGColour = 'bg-info';
+        var cardDivName = 'playerBuildingsCards';
+        if (handOrBuilding === 'hand') {
+            cardCounterName = 'handCardCount';
+            cardCounterValue = handCardCount;
+            cardBGColour = 'bg-secondary';
+            cardDivName = 'playerHandCards';
+        }
+        cards.forEach(function(card) {
             var divNewCol = $('<div>', { class: 'col-2' });
-            var divNewCard = $('<div>', { id: ('supplyCard' + (++supplyCardCount)), class: 'card text-center text-white bg-warning', style: 'width: 12rem;' });
-            var divNewCardHeader = $('<div>', { class: 'card-header' }).text(supplyCard.name);
+            var divNewCard = $('<div>', { id: (cardCounterName + (++cardCounterValue)), class: 'card text-center text-white ' + cardBGColour, style: 'width: 12rem;' });
+            var divNewCardHeader = $('<div>', { class: 'card-header' }).text(card.name);
             var divCardBody = $('<div>', { class: 'card-body' })
-                .append($('<b>', { class: 'card-title' }).text(supplyCard.abilityPhase))
-                .append($('<p>', { class: 'card-text' }).text(supplyCard.ability));
+                .append($('<b>', { class: 'card-title' }).text(card.abilityPhase))
+                .append($('<p>', { class: 'card-text' }).text(card.ability));
             var divCardFooter = $('<div>', { class: 'card-footer' })
-                .append($('<small>', { class: 'text-muted float-left' }).text('Cost: ' + supplyCard.cost + ' card(s)'))
-                .append($('<small>', { class: 'text-muted float-right' }).text(supplyCard.victoryPoints + ' VP(s)'));
+                .append($('<small>', { class: 'float-left' }).text('Cost: ' + card.cost + ' card(s)'))
+                .append($('<small>', { class: 'float-right' }).text(card.victoryPoints + ' VP(s)'));
             var divNewCardComplete = divNewCol.append(divNewCard.append(divNewCardHeader).append(divCardBody).append(divCardFooter));
-            var playerCardsDiv = $('#playerCards');
-            playerCardsDiv.append(divNewCardComplete);
+            var cardDiv = $('#' + cardDivName);
+            cardDiv.append(divNewCardComplete);
         });
     }
 
     function displayRoleCard(roleCards) {
         roleCards.forEach(function(roleCard) {
             var divNewCol = $('<div>', { class: 'col-2' });
-            var divNewCard = $('<div>', { id: ('roleCard' + (++roleCardCount)), class: 'card text-center text-white bg-info', style: 'width: 12rem;' });
+            var divNewCard = $('<div>', { id: ('roleCard' + (++roleCardCount)), class: 'card text-center text-white bg-warning small', style: 'width: 10rem;' });
             var divNewCardHeader = $('<div>', { class: 'card-header' }).text(roleCard.name);
             var divCardBody = $('<div>', { class: 'card-body' }).text('action: ' + roleCard.action);
             var divCardFooter = $('<div>', { class: 'card-footer' }).text('privilege: ' + roleCard.privilege);
@@ -70,15 +64,10 @@ $(document).ready(function() {
         });
     }
 
-    function sendWebSockedStatusToInfoLog(socket, message, isImportant) {
+    function sendErrorToInfoLog(message) {
         var currentTime = new Date();
         var currentTimeHMS = '[' + currentTime.getHours() + ':' + currentTime.getMinutes() + ':' + currentTime.getSeconds() + ' ' + message + '] ';
-        if (isImportant) {
-            $('#infoLogMessage').append($('<span>').append(currentTimeHMS + socket.url).css('font-weight', 'bold'));
-        } else {
-            $('#infoLogMessage').append($('<span>').append(currentTimeHMS + socket.url));
-        }
+        $('#infoLogMessage').append($('<span>').append(currentTimeHMS));
         $('#infoLogMessage').append('<br>');
     }
-
 });

@@ -2,19 +2,18 @@ package controllers
 
 import javax.inject._
 
-import actors.GameActor
-import akka.actor._
-import akka.stream.Materializer
-
-import play.api.libs.streams.ActorFlow
+import models.SanJuan
+import play.api.libs.json.Json
 import play.api.mvc._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents)(implicit actorSystem: ActorSystem, mat: Materializer) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents, sanJuan: SanJuan) extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -27,15 +26,19 @@ class HomeController @Inject()(cc: ControllerComponents)(implicit actorSystem: A
     Ok(views.html.index())
   }
 
-  /**
-    * Create a game actor that will handle the game WebSocket connection.
+  /** Handles the action to create a game.
     *
+    * FIXME get the player name from the request
     */
-  def game = WebSocket.accept[String, String] {
-    // FIXME must handle broadcast a message to all actors
-    request =>
-      ActorFlow.actorRef {
-        out => GameActor.props(out)
-      }
+  def createGame = Action.async {
+    sanJuan.createGameWithPlayer("carlos").map { roleCardsAndPlayer =>
+      Ok(Json.obj(
+        "roleCards" -> roleCardsAndPlayer._1,
+        "player" -> roleCardsAndPlayer._2
+      ))
+    }.recover {
+      // FIXME handle error properly and send message
+      case error => Ok(s"error while creating game: ${error}")
+    }
   }
 }

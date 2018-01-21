@@ -3,22 +3,26 @@
 @main("San Juan Scala") {
   <h3>San Juan Scala card game</h3>
 
-  <input type="hidden" value="@routes.HomeController.game.webSocketURL()" id="gameWebSocket">
-
-  <div class="container-fluid">
-    <button type="button" class="btn btn-info" id="infoLogBtn">Show info log</button>
+  <div class="container-fluid small">
+    <button type="button" class="btn btn-success btn-sm" id="createGameBtn">Create game</button>
     <hr>
-
-    <button type="button" class="btn btn-primary" id="drawCard">Draw card</button>
-    <button type="button" class="btn btn-primary" id="buildRoleCards">Build role cards</button>
-
-    <div class="row" id="roleCards"></div>
-    <div class="row" id="playerCards"></div>
+    Roles cards:
+    <div class="card card-body w-75">
+        <div class="row" id="roleCards"></div>
+    </div>
+    Your cards:
+    <div class="card card-body w-75">
+        <div class="row" id="playerHandCards"><!-- the content goes here dynamically --></div>
+    </div>
+    Your buildings:
+    <div class="card card-body w-75">
+        <div class="row" id="playerBuildingsCards"><!-- the content goes here dynamically --></div>
+    </div>
   </div>
 
   <div id="infoLogBar">
-    <div class="alert alert-info" role="alert">
-      Information log:
+    <div class="alert alert-danger" role="alert">
+      Error:
       <button type="button" class="close" aria-label="Hide" id="infoLogHideBtn">
         <span aria-hidden="true">&times;</span>
       </button>

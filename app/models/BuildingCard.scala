@@ -1,7 +1,5 @@
 package models
 
-import play.api.libs.json.{JsValue, Json, Writes}
-
 /** A building card in the game.
   *
   * @param name the name of the card
@@ -14,23 +12,9 @@ import play.api.libs.json.{JsValue, Json, Writes}
 case class BuildingCard(name: String, cost: Int, abilityPhase: String, ability: String, victoryPoints: Int, discard: Boolean = false)
 
 object BuildingCard {
+  import play.api.libs.json.Json
 
-  // conversion from building card to json representation
-  implicit val buildingCardWrites = new Writes[BuildingCard] {
-    override def writes(bc: BuildingCard): JsValue = {
-      Json.obj("cardType" -> "supply",
-        "cards" -> Json.arr(
-          Json.obj(
-            "name" -> bc.name,
-            "cost" -> bc.cost,
-            "abilityPhase" -> bc.abilityPhase,
-            "ability" -> bc.ability,
-            "victoryPoints" -> bc.victoryPoints
-          )
-        )
-      )
-    }
-  }
+  implicit val buildingCardFormat = Json.format[BuildingCard]
 }
 
 

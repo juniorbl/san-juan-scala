@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.Json
 
 /** A role card in the game.
   *
@@ -12,14 +12,5 @@ case class RoleCard(name: String, action: String, privilege: String)
 
 object RoleCard {
 
-  // conversion from role card to json representation
-  implicit val roleCardWrites = new Writes[RoleCard] {
-    override def writes(rc: RoleCard): JsValue = {
-      Json.obj(
-        "name" -> rc.name,
-        "action" -> rc.action,
-        "privilege" -> rc.privilege
-      )
-    }
-  }
+  implicit val gameFormat = Json.format[RoleCard]
 }

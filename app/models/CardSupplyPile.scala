@@ -1,6 +1,7 @@
 package models
 
 import scala.annotation.tailrec
+import scala.util.Random
 
 /** Logic related to the card supply pile in the game.
   *
@@ -14,6 +15,7 @@ object CardSupplyPile {
     */
   def buildInitialPile(): Vector[(BuildingCard, Int)] = {
     Vector(
+      // FIXME remember: with less 1 indigo as it goes to the starting player...
       (BuildingCard("Archive", 1, "councillor phase", "owner may discard cards from their hand/or cards that were just drawn", 1), 3),
       (BuildingCard("Gold Mine", 1, "prospector phase", "owner draws 4 cards and, if all have different building costs, keeps the cheapest", 1), 3),
       (BuildingCard("Smithy", 1, "builder phase", "owner pays 1 card less when building production buildings", 1), 3),
@@ -55,5 +57,23 @@ object CardSupplyPile {
     val vectorIndexWhereCardWasDrawn = supplyPile.indexOf((cardAtIndex, quantity))
     val updatedSupplyPile = supplyPile.updated(vectorIndexWhereCardWasDrawn, (cardAtIndex, quantity - 1))
     (cardAtIndex, updatedSupplyPile)
+  }
+
+  /** Draws a given number of cards from the supply pile.
+    *
+    * @param counter the card counter
+    * @param quantity the number of cards to drawn
+    * @param supplyPile the supply pile to draw from
+    * @param accumulator the accumulator list of drawn cards
+    * @return a tuple with a list of cards drawn and the updated supply pile
+    */
+  @tailrec
+  def drawNCardsFromPile(counter: Int, quantity: Int, supplyPile: Vector[(BuildingCard, Int)], accumulator: List[BuildingCard]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
+    if (counter > quantity) {
+      (accumulator, supplyPile)
+    } else {
+      val (cardDrawn, updatedSupplyPile) = drawCard(Random.nextInt(supplyPile.map(_._2).sum), supplyPile)
+      drawNCardsFromPile(counter + 1, quantity, updatedSupplyPile, cardDrawn :: accumulator)
+    }
   }
 }

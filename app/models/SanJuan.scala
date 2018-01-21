@@ -1,17 +1,52 @@
 package models
 
+import javax.inject.{Inject, Singleton}
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.Random
 
-/** The central game logic.
+/** Represents a game and its information.
   *
+  * @param activePlayer the player active at a given moment
+  * @param roleCards the role cards
+  * @param cardSupplyPile the supply of cards and its quantity
   */
+case class Game(activePlayer: Player, roleCards: List[RoleCard], cardSupplyPile: Vector[(BuildingCard, Int)])
+
 object Game {
+  import play.api.libs.json.Json
+
+  implicit val gameFormat = Json.format[Game]
+}
+
+/** Central logic of the game.
+  *
+  * @param gameRepository the game repository
+  */
+@Singleton
+class SanJuan @Inject()(gameRepository: GameRepository) {
+
+  /** Creates a game and its first player.
+    *
+    * @param startingPlayerName the name of the first player
+    * @return a tuple with the role cards and the newly created player
+    */
+  def createGameWithPlayer(startingPlayerName: String): Future[(List[RoleCard], Player)] = {
+    val (playerHand, updatedCardSupplyPile) = CardSupplyPile.drawNCardsFromPile(1, 4, CardSupplyPile.buildInitialPile(), List())
+    val startingPlayer = Player.createPlayer(startingPlayerName, playerHand)
+    val roleCards = createRoleCards()
+    val game = Game(startingPlayer, roleCards, updatedCardSupplyPile)
+    gameRepository.saveGame(game).map { _ =>
+      (roleCards, startingPlayer)
+    }
+  }
 
   /** Creates all the role cards of the game.
     *
     * @return a list of the role cards
     */
-  def createRoleCards(): List[RoleCard] = {
+  private[models] def createRoleCards(): List[RoleCard] = {
     List(
       RoleCard("Builder", "each player can build one building", "builder pays one card less"),
       RoleCard("Trader", "each player can sell one good", "trader can sell one additional good"),
@@ -52,3 +87,4 @@ object Game {
     }
   }
 }
+
