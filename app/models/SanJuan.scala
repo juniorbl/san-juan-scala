@@ -2,9 +2,7 @@ package models
 
 import javax.inject.{Inject, Singleton}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
-import scala.util.Random
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Represents a game and its information.
   *
@@ -25,7 +23,7 @@ object Game {
   * @param gameRepository the game repository
   */
 @Singleton
-class SanJuan @Inject()(gameRepository: GameRepository) {
+class SanJuan @Inject()(implicit execContext: ExecutionContext, gameRepository: GameRepository) {
 
   /** Creates a game and its first player.
     *

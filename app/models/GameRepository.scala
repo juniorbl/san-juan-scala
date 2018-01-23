@@ -6,14 +6,13 @@ import play.api.Logger
 import play.modules.reactivemongo.ReactiveMongoApi
 import reactivemongo.play.json.collection.{JSONCollection, _}
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 /** Repository for the game.
   *
   * @param mongoApi the mongo that will be used
   */
-class GameRepository @Inject()(mongoApi: ReactiveMongoApi) {
+class GameRepository @Inject()(implicit execContext: ExecutionContext, mongoApi: ReactiveMongoApi) {
 
   import Game._
 
