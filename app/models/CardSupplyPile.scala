@@ -32,7 +32,7 @@ object CardSupplyPile {
     * @param supplyPile the supply pile from where the card should be drawn
     * @return a tuple with the card drawn and the updated supply pile
     */
-  def drawCard(cardIndexToTake: Int, supplyPile: Vector[(BuildingCard, Int)]): (BuildingCard, Vector[(BuildingCard, Int)]) = {
+  private[this] def drawCard(cardIndexToTake: Int, supplyPile: Vector[(BuildingCard, Int)]): (BuildingCard, Vector[(BuildingCard, Int)]) = {
 
     // Use binary search to find the card at the given index, repeatedly dividing the pile vector in half until it finds the index, ex:
     // if a vector represents the following supply pile:
@@ -61,19 +61,22 @@ object CardSupplyPile {
 
   /** Draws a given number of cards from the supply pile.
     *
-    * @param counter the card counter
     * @param quantity the number of cards to drawn
     * @param supplyPile the supply pile to draw from
-    * @param accumulator the accumulator list of drawn cards
     * @return a tuple with a list of cards drawn and the updated supply pile
     */
-  @tailrec
-  def drawNCardsFromPile(counter: Int, quantity: Int, supplyPile: Vector[(BuildingCard, Int)], accumulator: List[BuildingCard]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
-    if (counter > quantity) {
-      (accumulator, supplyPile)
-    } else {
-      val (cardDrawn, updatedSupplyPile) = drawCard(Random.nextInt(supplyPile.map(_._2).sum), supplyPile)
-      drawNCardsFromPile(counter + 1, quantity, updatedSupplyPile, cardDrawn :: accumulator)
+  def drawNCardsFromPile(quantity: Int, supplyPile: Vector[(BuildingCard, Int)]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
+
+    @tailrec
+    def getCards(counter: Int, quantity: Int, supplyPile: Vector[(BuildingCard, Int)], accumulator: List[BuildingCard]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
+      if (counter > quantity) {
+        (accumulator, supplyPile)
+      } else {
+        val (cardDrawn, updatedSupplyPile) = drawCard(Random.nextInt(supplyPile.map(_._2).sum), supplyPile)
+        getCards(counter + 1, quantity, updatedSupplyPile, cardDrawn :: accumulator)
+      }
     }
+
+    getCards(1, quantity, supplyPile, List())
   }
 }

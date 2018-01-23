@@ -33,7 +33,7 @@ class SanJuan @Inject()(gameRepository: GameRepository) {
     * @return a tuple with the role cards and the newly created player
     */
   def createGameWithPlayer(startingPlayerName: String): Future[(List[RoleCard], Player)] = {
-    val (playerHand, updatedCardSupplyPile) = CardSupplyPile.drawNCardsFromPile(1, 4, CardSupplyPile.buildInitialPile(), List())
+    val (playerHand, updatedCardSupplyPile) = CardSupplyPile.drawNCardsFromPile(4, CardSupplyPile.buildInitialPile())
     val startingPlayer = Player.createPlayer(startingPlayerName, playerHand)
     val roleCards = createRoleCards()
     val game = Game(startingPlayer, roleCards, updatedCardSupplyPile)
@@ -63,10 +63,8 @@ class SanJuan @Inject()(gameRepository: GameRepository) {
     * @return a tuple with the updated player hand and the updated supply pile
     */
   def prospect(playerHand: List[BuildingCard], supplyPile: Vector[(BuildingCard, Int)]): (List[BuildingCard], Vector[(BuildingCard, Int)]) = {
-    val (cardDrawn, updatedSupplyPile) = CardSupplyPile.drawCard(
-      Random.nextInt(supplyPile.map(_._2).sum),
-      supplyPile)
-    val updatedPlayerHand = cardDrawn :: playerHand
+    val (cardsDrawn, updatedSupplyPile) = CardSupplyPile.drawNCardsFromPile(1, supplyPile)
+    val updatedPlayerHand = cardsDrawn.head :: playerHand
     (updatedPlayerHand, updatedSupplyPile)
   }
 
