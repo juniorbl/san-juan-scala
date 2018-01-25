@@ -5,7 +5,31 @@
 
   <div class="container-fluid small">
     <button type="button" class="btn btn-success btn-sm" id="createGameBtn">Create game</button>
+    <button type="button" class="btn btn-success btn-sm" id="joinGameBtn" data-toggle="modal" data-target="#gameListingModal">Join game</button>
+
+    <!-- Game listing modal -->
+    <div class="modal fade" id="gameListingModal" tabindex="-1" role="dialog" aria-labelledby="gameListingLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="gameListingLabel">List of games</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            bla bla bla <button type="button" class="btn btn-outline-success btn-sm">Join</button><br>
+            ble ble ble <button type="button" class="btn btn-outline-success btn-sm">Join</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <hr>
+
+    <!-- Game and player cards -->
     Roles cards:
     <div class="card card-body w-75">
         <div class="row" id="roleCards"></div>

@@ -37,8 +37,9 @@ class HomeController @Inject()(cc: ControllerComponents, sanJuan: SanJuan) exten
         "player" -> roleCardsAndPlayer._2
       ))
     }.recover {
-      // FIXME handle error properly and send message
-      case error => Ok(s"error while creating game: ${error}")
+      case _: reactivemongo.core.actors.Exceptions.PrimaryUnavailableException =>
+        InternalServerError("Error: database not available")
+      case error => InternalServerError(s"Error while creating game: ${error.getMessage}")
     }
   }
 }

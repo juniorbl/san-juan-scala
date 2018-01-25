@@ -19,7 +19,7 @@ $(document).ready(function() {
             displayHandOrBuildingCards(roleCardsAndPlayer.player.buildings, 'building');
             displayRoleCard(roleCardsAndPlayer.roleCards)
         }).fail(function(error) {
-            sendErrorToInfoLog(error);
+            sendErrorToInfoLog(error.responseText);
             $('#infoLogBar').fadeIn();
         });
     });
