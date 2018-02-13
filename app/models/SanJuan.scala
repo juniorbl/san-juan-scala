@@ -6,11 +6,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 /** Represents a game and its information.
   *
-  * @param activePlayer the player active at a given moment
+  * @param activePlayerName the name of the player active at a given moment
+  * @param players the players in the game
   * @param roleCards the role cards
   * @param cardSupplyPile the supply of cards and its quantity
   */
-case class Game(activePlayer: Player, roleCards: List[RoleCard], cardSupplyPile: Vector[(BuildingCard, Int)])
+case class Game(activePlayerName: String, players: List[Player], roleCards: List[RoleCard], cardSupplyPile: Vector[(BuildingCard, Int)])
 
 object Game {
   import play.api.libs.json.Json
@@ -34,7 +35,7 @@ class SanJuan @Inject()(implicit execContext: ExecutionContext, gameRepository: 
     val (playerHand, updatedCardSupplyPile) = CardSupplyPile.drawNCardsFromPile(4, CardSupplyPile.buildInitialPile())
     val startingPlayer = Player.createPlayer(startingPlayerName, playerHand)
     val roleCards = RoleCard.createRoleCards()
-    val game = Game(startingPlayer, roleCards, updatedCardSupplyPile)
+    val game = Game(startingPlayer.name, List(startingPlayer), roleCards, updatedCardSupplyPile)
     gameRepository.saveGame(game).map { _ =>
       (roleCards, startingPlayer)
     }
